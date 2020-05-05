@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TODOs app</title>
+    <link rel="stylesheet" href="../styles/base.css">
+</head>
+<body>
+    <div id="principal">
+        <div id = "app_title">
+            <header>
+                <h1>TODOS</h1>
+            </header>
+        </div>
+        <div id = "board_todos">
+            <div class = "check" title="Mark all as completed">
+                <input type="checkbox" id="mark" name="markAll">
+                <label for="mark"></label>
+            </div>
+            <input type="text" id="enter_todo" class="descriptions" placeholder="What do you need today?" autofocus>   
+        </div>
+        <footer class="footer">
+            <span id="counter">
+                0 items left
+            </span>
+            <ul class="filterList">
+                <li><a class="filter" href="#">All</a></li>
+                <li><a class="filter" href="#active">Active</a></li>
+                <li><a class="filter" href="#completed">Completed</a></li>
+            </ul>
+            <button id="clearAll">Clear completed</button>
+         </footer>
+    </div>
+    <script src="../src/support.js"></script>
+    <script src="../src/todoAll.js"></script>
+    <script src="../src/redirect.js"></script>
+    <script src="../src/localStorageController.js"></script>
+</body>
+</html>

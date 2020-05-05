@@ -1,0 +1,164 @@
+:root {
+    background-color: #BEFFE2;
+}
+
+#principal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex start;
+}
+
+#app_title header h1{
+    font-size: 8em;
+    font-style: oblique;
+    color: #488399;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+div[id = "board_todos"] {
+    display: grid;
+    grid-template-columns: 2.5em repeat(3, 10em);
+    grid-template-rows: 2.8em;
+    grid-auto-flow: row;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 2px 0 2px 2px gray;
+}
+
+input {
+    padding-left: 10px;
+    font-size: x-large;
+}
+
+.descriptions {
+    grid-column: 2/ span 3;
+    border-radius: 0 10px 10px 0;
+}
+
+.container_todo {
+    padding-left: 10px;
+    border: 1px solid gray;
+    overflow-wrap: break-word;
+}
+
+.description_todo {
+    margin: 8px;
+    font-size: x-large;
+}
+
+.delete {
+    display: none;
+    font-weight: bolder;
+    font-size: x-large;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    float: right;
+    border: 1px solid gray;
+    border-radius: 50%;
+    position: relative;
+    bottom: 30%;
+    right: 5%;
+    cursor: pointer;
+}
+
+.container_todo:hover .delete {
+    display: block;
+}
+
+input[type = "checkbox"] {
+    visibility: hidden;
+}
+
+.check label {
+    background: #909090;
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    bottom: 0.8em;
+    left: .3em;
+    box-shadow: 0 0 5px black;   
+    transition: all .5s ease;
+  }
+
+  .check input[type=checkbox]:checked + label {
+    background: #78B7FF;
+    width: 30px;
+    height: 30px;
+    transition: all .5;
+  }
+
+  .check #mark:checked + label {
+    background: #40FF45;
+    width: 30px;
+    height: 30px;
+    transition: all .5;
+  }
+
+  .filterList {
+    padding-right: 0px;
+    padding-left: 0px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    margin: 0px;
+  }
+
+  .filterList li {
+    list-style-type: none;
+    display: inline;
+    padding-right: 5px;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: white;
+    border: 1px solid gray;
+    width: 30.7em;
+    color: #777;
+    padding-top: 10px;
+    padding-left: 2%;
+    padding-bottom: 10px;
+    height: 30px;
+    box-shadow: 2px 0 2px 2px gray;
+    visibility: hidden;
+}
+
+/*Estas son las propiedades del dbl click*/
+
+input[name="edit_todo"] {
+    width: 99%;
+    height: 2em;
+    margin-left: -10px;
+    border-radius: 0 10px 10px 0;
+}
+
+.editing_todo{
+    padding-left: 10px;
+    border: 1px solid gray;
+    overflow-wrap: break-word;
+}
+
+.filter {
+    text-decoration: none;
+    color: gray;
+    border: 0.8px solid darkgrey;
+    padding: 0 0.5em 0.1em;
+}
+
+#clearAll {
+    cursor: pointer;
+    visibility: hidden;
+    text-decoration:none;
+    font-weight:600;
+    font-size:15px;
+    color:white;
+    border-color: #6BB0E8;
+    padding: 0.2em 0.6em 0.2em;
+    background-color:#6BB0E8;
+}
