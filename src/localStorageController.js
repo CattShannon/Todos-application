@@ -5,6 +5,7 @@ const initializeLocalStorageData = async function () {
     try {
         const response = await loadData();
         initializeNumberOfElements();
+        console.log(response)
     } catch (rejected) {
         alert(`${rejected} Data has not been loaded.`)
     }
@@ -35,7 +36,7 @@ const renderFromLocalStorage = async function (filter) {
             throw "There is nothing to render";
         }
         const response = await startRendering(filter);
-        if(localStorage.filterStatus !== undefined){
+        if (localStorage.filterStatus !== undefined) {
             boardFooter.style.visibility = "visible";
         }
         console.log(response);
@@ -44,21 +45,19 @@ const renderFromLocalStorage = async function (filter) {
     }
 };
 
+function thereIsDataInStorage() {
+    return elementsListToSave !== undefined && elementsListToSave !== "";
+}
+
 function startRendering(filter) {
     return new Promise((resolve, rejected) => {
         try {
             const savedDOMElements = getListOfSavedElements();
             verifyClearAllButtonVisibility(savedDOMElements);
             if (filter === undefined) {
-                savedDOMElements.forEach( (element) => {
-                    createDOMTodoStructure(element.id, element.checked, element.descriptionText);
-                });
-            }else{
-                filter = Boolean(filter);
-                savedDOMElements.filter( (element) => element.checked === filter)
-                .forEach( (element) => {
-                    createDOMTodoStructure(element.id, element.checked, element.descriptionText);
-                });
+                renderAll(savedDOMElements);
+            } else {
+                renderByFilter(savedDOMElements, filter);
             }
             resolve("render success.");
         } catch (error) {
@@ -68,20 +67,39 @@ function startRendering(filter) {
 }
 
 function getListOfSavedElements() {
-    let arrayElements = elementsListToSave.split("&");
-    arrayElements = arrayElements.map((element) => JSON.parse(element));
-    return arrayElements;
-}
-
-function changeFilterStatus(status){
-    if(status === undefined){
-        localStorage.removeItem("filterStatus");
-    }else{
-        localStorage.setItem("filterStatus", status);
+    try{
+        let arrayElements = elementsListToSave.split("&");
+        arrayElements = arrayElements.map((element) => JSON.parse(element));
+        return arrayElements;
+    }catch(noElements){
+        console.log("There are no data.");
+        return [];
     }
 }
 
+function renderAll(savedDOMElements) {
+    savedDOMElements.forEach((element) => {
+        createDOMTodoStructure(element.id, element.checked, element.descriptionText);
+    });
+}
+
+function renderByFilter(savedDOMElements, filter) {
+    filter = Boolean(filter);
+    savedDOMElements.filter((element) => element.checked === filter)
+        .forEach((element) => {
+            createDOMTodoStructure(element.id, element.checked, element.descriptionText);
+        });
+}
+
 renderFromLocalStorage(localStorage.filterStatus);
+
+function changeFilterStatus(status) {
+    if (status === undefined) {
+        localStorage.removeItem("filterStatus");
+    } else {
+        localStorage.setItem("filterStatus", status);
+    }
+}
 
 function validateElementToSave(todoElement) {
     if (existElement(todoElement)) {
@@ -103,10 +121,6 @@ function saveInLocalStorage(todoElement) {
     }
     localStorage.setItem("allTodoList", elementsListToSave);
     countNewElement();
-}
-
-function thereIsDataInStorage() {
-    return elementsListToSave !== undefined && elementsListToSave !== "";
 }
 
 const getStringFormatOfElement = function (todoElement) {
@@ -133,6 +147,6 @@ function generateNewDataString(savedDOMElements) {
         );
 
     newDataString = newDataString.replace("&", "");
-    
-    return newDataString; 
+
+    return newDataString;
 }

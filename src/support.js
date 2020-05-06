@@ -54,10 +54,10 @@ function createNewTodoCheck(generatedId){
 
 function createCheckMark(generatedId, checked){
     let checkMark = document.createElement("input");
-    checkMark.type = "checkbox";
     checkMark.id = `check${generatedId}`;
-    checkMark.checked = checked;
     checkMark.classList.add("checkThis");
+    checkMark.type = "checkbox";
+    checkMark.checked = checked;
     checkMark.setAttribute("onchange", "recieveCheckChangeEvent(event)");
     
     return checkMark;
@@ -81,8 +81,8 @@ function createTodoContainer(generatedId){
 function createTodoInfo(generatedId, checked){
     let todoInfo = document.createElement("p");
     todoInfo.id = `description${generatedId}`;
-    todoInfo.setAttribute("ondblclick", "startEditingTodo(event)")
     todoInfo.classList.add("description_todo");
+    todoInfo.setAttribute("ondblclick", "startEditingTodo(event)")
     if(checked){
         todoInfo.style.color = "gray";
         todoInfo.style.textDecoration = "line-through";
@@ -98,7 +98,7 @@ function createDeleteButton(generatedId) {
     let labelDelete = document.createElement("label");
     labelDelete.id = generatedId;
     labelDelete.className = "delete";
-    labelDelete.setAttribute("onclick", "recieveCompletedItemEvent(event)");
+    labelDelete.setAttribute("onclick", "recieveDeleteItemEvent(event)");
 
     let deleteSymbol = document.createTextNode("X");
     labelDelete.appendChild(deleteSymbol);
