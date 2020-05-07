@@ -37,7 +37,7 @@ const renderFromLocalStorage = async function (filter) {
         }
         const response = await startRendering(filter);
         if (localStorage.filterStatus !== undefined) {
-            boardFooter.style.visibility = "visible";
+            setElementVisibility(".footer", "visible");
         }
         console.log(response);
     } catch (rejected) {
@@ -151,3 +151,27 @@ function generateNewDataString(savedDOMElements) {
 
     return newDataString;
 }
+
+function deleteFromStorage(completedTodoId){
+    let savedDOMElements = getListOfSavedElements();
+    return (savedDOMElements = savedDOMElements
+            .filter( (element) => {
+                return element.id !== parseInt(completedTodoId);
+            })
+        );   
+}
+
+function hideElement(DOMElement) {
+    if(localStorage.filterStatus === undefined || elementsListToSave === ""){
+        DOMElement.style.visibility = "hidden";
+    }
+}
+
+function* idMaker(value) {
+    let id = value || 0;
+    while (true) {
+        yield id++;
+    }
+}
+
+let idGenerator = idMaker(localStorage.numberOfElements);

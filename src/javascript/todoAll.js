@@ -1,34 +1,24 @@
-const enterTodo = document.querySelector("#enter_todo");
-const boardTodos = document.querySelector("#board_todos");
-const checkAll = document.querySelector("[name='markAll']");
-const boardFooter = document.querySelector("[class='footer']");
-const clearAll = document.querySelector("#clearAll");
+const enterTodo = () => getElement("#enter_todo");
+const checkAll =  () => getElement("[name='markAll']");
+const clearAll =  () => getElement("#clearAll");;
 
 function getTodoList_All() {
-    return document.querySelectorAll(".checkThis");
+    return getAllElementsBy(".checkThis");
 }
 
-function* idMaker(value) {
-    let id = value || 0;
-    while (true) {
-        yield id++;
-    }
-}
-
-enterTodo.addEventListener("keydown", createTodo);
-
-let idGenerator = idMaker(localStorage.numberOfElements);
+enterTodo().addEventListener("keydown", createTodo);
 
 function createTodo(keyPressed) {
-    const voidTodo = enterTodo.value === "";
+    const todoValue = getInputValue("#enter_todo");
+    const voidTodo = todoValue === "";
     const enterKey = keyPressed.key === "Enter"
     if (enterKey && !voidTodo) {
         let id = idGenerator.next().value
-        const saved = sendTLocalStorage(id, false, enterTodo.value.trim(), id);
+        const saved = sendTLocalStorage(id, false, todoValue.trim());
         
         if(saved){
 
-            createDOMTodoStructure(id, false, enterTodo.value);
+            createDOMTodoStructure(id, false, todoValue);
             
         }else{
             alert("Error saving in storage");
@@ -39,7 +29,7 @@ function createTodo(keyPressed) {
 function setItemsLeftCounter() {
     let counter = document.getElementById("counter");
     counter.textContent = countItemsLeft();
-    boardFooter.style.visibility = "visible";
+    setElementVisibility(".footer", "visible");
 }
 
 function countItemsLeft() {
@@ -93,9 +83,9 @@ function verifyClearAllButtonVisibility(dataStateChanged){
     let verifyCheckedElements = verifyTodoStatus(dataStateChanged, true)
 
     if(verifyCheckedElements.length > 0){
-        clearAll.style.visibility = "visible";
+        setElementVisibility("#clearAll", "visible");
     }else{
-        clearAll.style.visibility = "hidden";
+        setElementVisibility("#clearAll", "hidden");
     }
 }
 
@@ -119,15 +109,15 @@ function unmarkCompleted(description) {
     checkLocationFilter(idElement, "Completed");
 }
 
-checkAll.addEventListener("change", recieveAllMark);
+checkAll().addEventListener("change", recieveAllMark);
 
 function recieveAllMark() {
-    const isChecked = checkAll.checked
+    const isChecked = getCheckedValue("[name='markAll']");
     changeAllCompletedMark(isChecked);
 }
 
 function changeAllCompletedMark(isChecked) {
-    const listOfTodos = document.querySelectorAll(".checkThis");
+    const listOfTodos = getAllElementsBy(".checkThis");
     for (let checkElement of listOfTodos) {
         checkElement.checked = isChecked;
         recieveTodoMark(checkElement);
@@ -141,8 +131,11 @@ function recieveCheckChangeEvent(event) {
 function recieveTodoMark(checkMark) {
     let checkChange = checkMark.checked;
     let checkId = checkMark.id;
-    let descriptionComplete = document
-        .querySelector(`#description${getIdInAString(checkId)}`);
+    
+    let descriptionComplete = (
+        getElement(`#description${getIdInAString(checkId)}`)
+    );
+
     if (checkChange) {
         return markAsCompleted(descriptionComplete);
     }
@@ -169,17 +162,9 @@ function deleteTodo(completedTodoId){
     verifyItemsInTodoList();
 }
 
-function deleteFromStorage(completedTodoId){
-    let savedDOMElements = getListOfSavedElements();
-    return (savedDOMElements = savedDOMElements
-            .filter( (element) => {
-                return element.id !== parseInt(completedTodoId);
-            })
-        );   
-}
-
 function verifyItemsInTodoList() {
     let quantityItems = getQuantityOfItems();
+    const boardFooter = getElement(".footer");
     if (quantityItems === 0) {
         hideElement(boardFooter);
     }
@@ -189,14 +174,7 @@ function getQuantityOfItems() {
     return getTodoList_All().length;
 }
 
-function hideElement(DOMElement) {
-    if(localStorage.filterStatus === undefined || elementsListToSave === ""){
-        DOMElement.style.visibility = "hidden";
-    }
-}
-
-
-clearAll.addEventListener("click", clearAllCompletedTodos);
+clearAll().addEventListener("click", clearAllCompletedTodos);
 
 function clearAllCompletedTodos() {
     let listTodoData = getListOfSavedElements();
@@ -218,15 +196,16 @@ function startEditingTodo(event) {
 
         todoContainer.insertAdjacentElement("afterbegin", editTodoInput);
 
-        editTodoInput.addEventListener("blur", editingLostFocus);
         editTodoInput.addEventListener("keydown", editingKeyPressed);
-
+        //editTodoInput.addEventListener("blur", editingLostFocus);
+        
         editTodoInput.focus();
     }
 }
 
 function renameElementClass(DOMElement, oldName, newName){
     try{
+        debugger
         const containsClass = DOMElement.classList.contains(oldName);
         if(containsClass){
             DOMElement.classList.replace(oldName, newName);
@@ -241,7 +220,7 @@ function renameElementClass(DOMElement, oldName, newName){
 }
 
 function changeElementDisplay(DOMElement, display){
-    descriptionParagraph.style.display = display;
+    DOMElement.style.display = display;
 }
 
 const createEditingInput = function (descriptionText) {
@@ -253,16 +232,10 @@ const createEditingInput = function (descriptionText) {
     return inputToEdit;
 }
 
-function editingLostFocus(event) {
-    const editingInput = event.target;
-    applyChanges(editingInput);
-}
-
 function editingKeyPressed(keyPressed){
     const isEscape = keyPressed.key == "Escape";
     const isEnter = keyPressed.key == "Enter";
     const editingInput = event.target;
-
     if(isEscape){
         changeElementDisplay(editingInput.nextElementSibling, "block");
         resetEditingTodoInput(editingInput);
@@ -274,6 +247,14 @@ function editingKeyPressed(keyPressed){
     }
 }
 
+/* function editingLostFocus(event) {
+    debugger
+    if(event.type !== "KeyboardEvent"){
+        const editingInput = event.target;
+        applyChanges(editingInput);
+    }
+} */
+
 function applyChanges(editingInput){ 
     const parentContainer = editingInput.parentNode;
     const newDescriptionText = editingInput.value.trim();
@@ -282,7 +263,7 @@ function applyChanges(editingInput){
 
     if( textIsValid(newDescriptionText) && isRenamed ){
         descriptionToChange.textContent = newDescriptionText;
-        changeElementDisplay(descriptionToChange, "none");
+        changeElementDisplay(descriptionToChange, "block");
         resetEditingTodoInput(editingInput);
         return true;
     }else{
@@ -297,8 +278,8 @@ function textIsValid(newDescriptionText){
 
 function invalidateTodo( editingInput, descriptionToChange ){
     let todoItemId = getIdInAString(descriptionToChange.id)
-    deleteTodo(todoItemId);
     resetEditingTodoInput( editingInput );
+    deleteTodo(todoItemId);
     
     return "Bad input, todo item invalidated";
 }

@@ -1,8 +1,4 @@
 
-//Es necesario cargar todos los scripts?? pregunta<----
-//como recargar solo una cierta parte de la pagina
-//como hacer el enrutamiento #/
-
 function sendTLocalStorage(id, checked, descriptionText) {
     const elementToSave = createJSON(id, checked, descriptionText);
     return validateElementToSave(elementToSave);
@@ -65,9 +61,9 @@ function createDOMTodoStructure(generatedId, checked, textDescription) {
     newTodoCheck.appendChild(checkMark);
     newTodoCheck.appendChild(checkLabel);
 
-    boardTodos.appendChild(newTodoCheck);
-    boardTodos.appendChild(todoContainer);
-    enterTodo.value = "";
+    addTodoElement("#board_todos", newTodoCheck);
+    addTodoElement("#board_todos", todoContainer);
+    setInputValue("#enter_todo", "");
 
     setItemsLeftCounter();
 }

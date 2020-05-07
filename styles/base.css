@@ -129,8 +129,6 @@ input[type = "checkbox"] {
     visibility: hidden;
 }
 
-/*Estas son las propiedades del dbl click*/
-
 input[name="edit_todo"] {
     width: 99%;
     height: 2em;
