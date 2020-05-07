@@ -6,7 +6,6 @@ filter[1].addEventListener("click", filterTodos);
 filter[2].addEventListener("click", filterTodos);
 
 function filterTodos(event){
-    debugger
     let filterEvent = event.target;
     if( isTo(filterEvent, "Active") ){
         changeFilterStatus("");

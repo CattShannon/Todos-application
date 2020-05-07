@@ -20,6 +20,35 @@ function reload(){
     location.reload();
 }
 
+function checkLocationFilter(idElement, filterStatus){
+
+    filterStatus = getFilterStatusCommand(filterStatus);
+
+    if(localStorage.filterStatus === filterStatus){
+        removeTodoItem(idElement);
+    }
+}
+
+function getFilterStatusCommand(filterStatus){
+    if(filterStatus === "Active"){
+        return "";
+    }else{
+        return "completed";
+    }
+}
+
+function removeTodoItem(elementId){
+    try{
+        const checkItemContainer = document.querySelector(`#item${elementId}`);
+        const todoContainer = document.querySelector(`#container${elementId}`);
+
+        checkItemContainer.remove();
+        todoContainer.remove();
+    }catch(error){
+        alert("Error. Can't delete this item: " + error);
+    } 
+}
+
 function createDOMTodoStructure(generatedId, checked, textDescription) {
     
     let newTodoCheck = createNewTodoCheck(generatedId);

@@ -70,7 +70,9 @@ function markAsCompleted(description) {
 
     description.style.color = "gray";
     description.style.textDecoration = "line-through";
+    
     setItemsLeftCounter();
+    checkLocationFilter(idElement, "Active");
 }
 
 
@@ -112,7 +114,9 @@ function unmarkCompleted(description) {
 
     description.style.color = "black";
     description.style.textDecoration = "none";
+    
     setItemsLeftCounter();
+    checkLocationFilter(idElement, "Completed");
 }
 
 checkAll.addEventListener("change", recieveAllMark);
@@ -154,11 +158,7 @@ function deleteItem(todoId) {
 }
 
 function deleteTodo(completedTodoId){
-    const checkItemContainer = document.querySelector(`#item${completedTodoId}`);
-    const todoContainer = document.querySelector(`#container${completedTodoId}`);
-
-    checkItemContainer.remove();
-    todoContainer.remove();
+    removeTodoItem(completedTodoId);
 
     let savedDOMElements = deleteFromStorage(completedTodoId);
 

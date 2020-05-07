@@ -54,6 +54,7 @@ function startRendering(filter) {
         try {
             const savedDOMElements = getListOfSavedElements();
             verifyClearAllButtonVisibility(savedDOMElements);
+            
             if (filter === undefined) {
                 renderAll(savedDOMElements);
             } else {
