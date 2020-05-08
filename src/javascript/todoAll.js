@@ -1,20 +1,16 @@
-const enterTodo = () => getElement("#enter_todo");
-const checkAll =  () => getElement("[name='markAll']");
-const clearAll =  () => getElement("#clearAll");;
 
 function getTodoList_All() {
     return getAllElementsBy(".checkThis");
 }
-
-enterTodo().addEventListener("keydown", createTodo);
 
 function createTodo(keyPressed) {
     const todoValue = getInputValue("#enter_todo");
     const voidTodo = todoValue === "";
     const enterKey = keyPressed.key === "Enter"
     if (enterKey && !voidTodo) {
+
         let id = idGenerator.next().value
-        const saved = sendTLocalStorage(id, false, todoValue.trim());
+        const saved = sendToLocalStorage(id, false, todoValue.trim());
         
         if(saved){
 
@@ -27,7 +23,7 @@ function createTodo(keyPressed) {
 }
 
 function setItemsLeftCounter() {
-    let counter = document.getElementById("counter");
+    let counter = getElement("#counter");
     counter.textContent = countItemsLeft();
     setElementVisibility(".footer", "visible");
 }
@@ -109,7 +105,7 @@ function unmarkCompleted(description) {
     checkLocationFilter(idElement, "Completed");
 }
 
-checkAll().addEventListener("change", recieveAllMark);
+
 
 function recieveAllMark() {
     const isChecked = getCheckedValue("[name='markAll']");
@@ -119,7 +115,8 @@ function recieveAllMark() {
 function changeAllCompletedMark(isChecked) {
     const listOfTodos = getAllElementsBy(".checkThis");
     for (let checkElement of listOfTodos) {
-        checkElement.checked = isChecked;
+        let queryElementId = `#${checkElement.id}`;
+        setCheckedValue(queryElementId, isChecked);
         recieveTodoMark(checkElement);
     }
 }
@@ -129,8 +126,8 @@ function recieveCheckChangeEvent(event) {
 }
 
 function recieveTodoMark(checkMark) {
-    let checkChange = checkMark.checked;
     let checkId = checkMark.id;
+    let checkChange = getCheckedValue(`#${checkId}`);
     
     let descriptionComplete = (
         getElement(`#description${getIdInAString(checkId)}`)
@@ -174,8 +171,6 @@ function getQuantityOfItems() {
     return getTodoList_All().length;
 }
 
-clearAll().addEventListener("click", clearAllCompletedTodos);
-
 function clearAllCompletedTodos() {
     let listTodoData = getListOfSavedElements();
     let listOfActive = verifyTodoStatus(listTodoData, false);
@@ -186,18 +181,18 @@ function clearAllCompletedTodos() {
 
 function startEditingTodo(event) {
     let descriptionParagraph = event.target;
-    const todoContainer = descriptionParagraph.parentNode;
+    const todoContainer = getParentNode(descriptionParagraph);
 
     if ( renameElementClass(todoContainer, "container_todo", "editing_todo") ){
-        changeElementDisplay(descriptionParagraph, "none");
+        setElementDisplay(descriptionParagraph, "none");
             
-        let descriptionText = descriptionParagraph.textContent;
+        let descriptionText = getElementTextContent(descriptionParagraph);
         let editTodoInput = createEditingInput(descriptionText);
 
-        todoContainer.insertAdjacentElement("afterbegin", editTodoInput);
+        insertHTMLElement(todoContainer, "afterbegin", editTodoInput);
 
-        editTodoInput.addEventListener("keydown", editingKeyPressed);
-        //editTodoInput.addEventListener("blur", editingLostFocus);
+        innerListenner(editTodoInput, "keydown", editingKeyPressed)
+        //innerListenner(editTodoInput, "blur", editingLostFocus);
         
         editTodoInput.focus();
     }
@@ -205,13 +200,12 @@ function startEditingTodo(event) {
 
 function renameElementClass(DOMElement, oldName, newName){
     try{
-        debugger
-        const containsClass = DOMElement.classList.contains(oldName);
+        const containsClass = checkIfContainsClass(DOMElement, oldName);
         if(containsClass){
-            DOMElement.classList.replace(oldName, newName);
+            replaceClassName(DOMElement, oldName, newName);
             return true;
         }else{
-            throw new Error("Class name was not found in DOMElement");
+            throw new Error("Class name was not found in DOMElement.");
         }
     }catch(error){
         console.log("Error " + error)
@@ -219,15 +213,11 @@ function renameElementClass(DOMElement, oldName, newName){
     }
 }
 
-function changeElementDisplay(DOMElement, display){
-    DOMElement.style.display = display;
-}
-
 const createEditingInput = function (descriptionText) {
     const inputToEdit = document.createElement("input");
     inputToEdit.name = "edit_todo";
     inputToEdit.type = "text";
-    inputToEdit.value = descriptionText;
+    setInputValue(inputToEdit, descriptionText);
 
     return inputToEdit;
 }
@@ -236,35 +226,42 @@ function editingKeyPressed(keyPressed){
     const isEscape = keyPressed.key == "Escape";
     const isEnter = keyPressed.key == "Enter";
     const editingInput = event.target;
+    const descriptionToChange = getSiblingNode(editingInput);
+
     if(isEscape){
-        changeElementDisplay(editingInput.nextElementSibling, "block");
+        setElementDisplay(descriptionToChange, "block");
         resetEditingTodoInput(editingInput);
         return "No changes where applied";
     }
 
     if(isEnter){
-        applyChanges(editingInput);
+
+        applyChanges(editingInput, descriptionToChange);
+
     }
 }
 
 /* function editingLostFocus(event) {
-    debugger
+    //debugger
     if(event.type !== "KeyboardEvent"){
         const editingInput = event.target;
         applyChanges(editingInput);
     }
 } */
 
-function applyChanges(editingInput){ 
-    const parentContainer = editingInput.parentNode;
-    const newDescriptionText = editingInput.value.trim();
-    const descriptionToChange = editingInput.nextElementSibling;
+function applyChanges(editingInput, descriptionToChange){ 
+    const parentContainer = getParentNode(editingInput);
+    const newDescriptionText = getElementInputValue(editingInput);
+    const idTodoItem = getIdInAString(descriptionToChange.id);
     const isRenamed = renameElementClass(parentContainer, "editing_todo", "container_todo");
 
     if( textIsValid(newDescriptionText) && isRenamed ){
-        descriptionToChange.textContent = newDescriptionText;
-        changeElementDisplay(descriptionToChange, "block");
+        setElementTextContent(descriptionToChange, newDescriptionText)
+        setElementDisplay(descriptionToChange, "block");
         resetEditingTodoInput(editingInput);
+
+        let newChanges = changeText(idTodoItem, newDescriptionText);
+        assignNewData( newChanges );
         return true;
     }else{
         return invalidateTodo(editingInput, descriptionToChange)
@@ -275,6 +272,18 @@ function textIsValid(newDescriptionText){
     return newDescriptionText !== ""; 
 }
 
+function changeText(idElement, newDescriptionText){
+    let savedDOMElements = getListOfSavedElements();
+    savedDOMElements = savedDOMElements
+        .map( (targetElement) => {
+            if(targetElement.id === parseInt(idElement)){
+                targetElement.descriptionText = newDescriptionText;
+            }
+            return targetElement;
+        });
+
+    return savedDOMElements;
+}
 
 function invalidateTodo( editingInput, descriptionToChange ){
     let todoItemId = getIdInAString(descriptionToChange.id)

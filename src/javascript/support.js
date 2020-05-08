@@ -1,5 +1,5 @@
 
-function sendTLocalStorage(id, checked, descriptionText) {
+function sendToLocalStorage(id, checked, descriptionText) {
     const elementToSave = createJSON(id, checked, descriptionText);
     return validateElementToSave(elementToSave);
 }
