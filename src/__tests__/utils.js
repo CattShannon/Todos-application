@@ -10,8 +10,7 @@ test("get an dom element", () => {
     document.body.insertAdjacentElement("afterbegin", elementTest);
     
     //Act
-    let element = utils.getElement("#test");
-
+    let element = utils.getElement("#test"); 
     //Assert
     expect(element).toEqual(elementTest);
 }); 

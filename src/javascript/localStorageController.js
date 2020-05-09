@@ -103,11 +103,19 @@ function changeFilterStatus(status) {
 }
 
 function validateElementToSave(todoElement) {
-    if (existElement(todoElement)) {
-        saveInLocalStorage(todoElement);
-        return true;
+    debugger;
+    const idExist = !!todoElemet.id;
+    const descriptionExist = !!todoElemet.descriptionText;
+    const checkExist = todoElemet.checked !== null ||
+                       todoElemet.checked !== undefined;
+    
+    const allElementPropertiesExist = idExist && descriptionExist && checkExist;
+
+    if (!existElement(todoElement) || !allElementPropertiesExist) {
+        return false;
     }
-    return false;
+    saveInLocalStorage(todoElement);
+    return true;
 }
 
 const existElement = function (todoElement) {

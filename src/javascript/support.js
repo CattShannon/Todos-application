@@ -42,6 +42,7 @@ function removeTodoItem(elementId){
         todoContainer.remove();
     }catch(error){
         alert("Error. Can't delete this item: " + error);
+        throw "Error item doesn't exist";
     } 
 }
 
@@ -89,11 +90,12 @@ function createCheckMark(generatedId, checked){
 }
 
 function createCheckLabel(checkMark){
-    let checkLabel = document.createElement("label");
+    let checkLabel = document.createElement("label");       
     checkLabel.setAttribute("for", checkMark.id);
 
     return checkLabel;
 }
+
 
 function createTodoContainer(generatedId){
     let todoContainer = document.createElement("div")
@@ -102,6 +104,7 @@ function createTodoContainer(generatedId){
 
     return todoContainer;
 }
+
 
 function createTodoInfo(generatedId, checked){
     let todoInfo = document.createElement("p");
@@ -119,6 +122,7 @@ function createTodoInfo(generatedId, checked){
     return todoInfo;
 }
 
+
 function createDeleteButton(generatedId) {
     let labelDelete = document.createElement("label");
     labelDelete.id = generatedId;
@@ -129,4 +133,20 @@ function createDeleteButton(generatedId) {
     labelDelete.appendChild(deleteSymbol);
 
     return labelDelete;
+}
+
+if (typeof exports !== 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = {
+            createJSON,
+            getFilterStatusCommand,
+            createNewTodoCheck,
+            createCheckMark,
+            createCheckLabel,
+            createTodoContainer,
+            createTodoInfo,
+            createDeleteButton ,
+            removeTodoItem          
+        }
+    }
 }
