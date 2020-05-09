@@ -1,5 +1,5 @@
 
-const filter = document.querySelectorAll(".filter");
+const filter = getAllElementsBy(".filter");
 
 filter[0].addEventListener("click", filterTodos);
 filter[1].addEventListener("click", filterTodos);

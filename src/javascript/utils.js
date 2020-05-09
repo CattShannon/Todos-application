@@ -1,37 +1,41 @@
-const getElement = (inputQuery) => {
-    return document.querySelector(inputQuery);
+const getElement = (elementQuery) => {
+    return document.querySelector(elementQuery);
 }
 
-function getAllElementsBy(inputQuery){
-    return document.querySelectorAll(inputQuery);
+function getAllElementsBy(elementsQuery){
+    return document.querySelectorAll(elementsQuery);
+}
+
+function getElementInputValue(element){
+    return element.value.trim();
 }
 
 function getInputValue(inputQuery){
     return document.querySelector(inputQuery).value.trim();
 }
 
-function setInputValue(element, value){
-    element.value = value.trim();
+function setInputValue(inputElement, value){
+    inputElement.value = value.trim();
 }
 
-function getCheckedValue(inputQuery){
-    return document.querySelector(inputQuery).checked;
+function getCheckedValue(checkQuery){
+    return document.querySelector(checkQuery).checked;
 }
 
-function setCheckedValue(inputQuery, check){
-    document.querySelector(inputQuery).checked = check;
+function setCheckedValue(checkQuery, check){
+    document.querySelector(checkQuery).checked = check;
 }
 
-function setElementVisibility(inputQuery, visibility){
-    document.querySelector(inputQuery).style.visibility = visibility;
+function setElementVisibility(elementQuery, visibility){
+    document.querySelector(elementQuery).style.visibility = visibility;
 }
 
-function cleanDomElement(inputQuery){
-    document.querySelector(inputQuery).innerHTML = '';
+function cleanDomElement(elementQuery){
+    document.querySelector(elementQuery).innerHTML = '';
 }
 
-function addTodoElement(inputQuery, todo){
-    document.querySelector(inputQuery).appendChild(todo);
+function addTodoElement(elementQuery, todo){
+    document.querySelector(elementQuery).appendChild(todo);
 }
 
 function getParentNode(element){
@@ -42,11 +46,7 @@ function getSiblingNode(element){
     return element.nextElementSibling;
 }
 
-function getElementInputValue(element){
-    return element.value.trim();
-}
-
-function getElementTextContent(element, newTextContent){
+function getElementTextContent(element){
     return element.textContent;
 }
 
@@ -68,4 +68,29 @@ function replaceClassName(element, oldName, newName){
 
 function insertHTMLElement(element, position, elementToInsert){
     element.insertAdjacentElement(position, elementToInsert);
+}
+
+if (typeof exports !== 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = {
+            getElement,
+            getAllElementsBy,
+            getInputValue,
+            setInputValue,
+            getCheckedValue,
+            setCheckedValue,
+            setElementVisibility,
+            cleanDomElement,
+            addTodoElement,
+            getParentNode,
+            getSiblingNode,
+            getElementInputValue,
+            getElementTextContent,
+            setElementTextContent,
+            setElementDisplay,
+            checkIfContainsClass,
+            replaceClassName,
+            insertHTMLElement
+        }
+    }
 }
